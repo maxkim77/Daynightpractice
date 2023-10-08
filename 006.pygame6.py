@@ -20,7 +20,7 @@ pg.display.set_caption("생선잡기 게임")
 스코어바 = pg.image.load("img/스코어바.png")
 스코어바 = pg.transform.scale(스코어바, (250, 70))
 
-시간바 = pg.image.load("img/시간-바.png")
+시간바 = pg.image.load("img/시간바.png")
 시간바 = pg.transform.scale(시간바, (200, 55))
 
 물고기 = [물고기1, 물고기2]
@@ -51,11 +51,12 @@ pg.display.update()
 폰트 = pg.font.SysFont("hy얕은샘물m", 30, True)
 시작시간 = pg.time.get_ticks()
 잡은물고기 = 0
+클릭횟수 = 10
 
 while True:
     경과시간 = round((pg.time.get_ticks() - 시작시간) / 1000, 1)
 
-    if 경과시간 >= 10:
+    if 경과시간 >= 10 or 클릭횟수 == 0:
         화면.blit(배경이미지, (0, 0))
         결과 = 폰트.render(f'총 {잡은물고기} 마리를 잡았습니다!', True, (0, 0, 0))
         게임종료 = 폰트.render(f'게임 종료!', True, (0, 0, 0))
@@ -78,7 +79,7 @@ while True:
         if 이벤트.type == pg.QUIT:
             quit()
         elif 이벤트.type == pg.MOUSEBUTTONDOWN:
-
+            클릭횟수 -= 1
             마우스 = pg.mouse.get_pos()
 
             for 포인트 in 물고기정답위치:
@@ -95,27 +96,26 @@ while True:
                     pg.draw.line(화면, (255, 255, 255), (520, 370), (520, 화면세로길이-30), 3)
                     pg.draw.line(화면, (255, 255, 255), (70, 화면세로길이-30), (520, 화면세로길이-30), 3)
 
-                if len(물고기정답위치) == 0:
-                    #시작시간 = pg.time.get_ticks()
-                    물고기위치 = random.sample(전체물고기위치, 5)
+                    if len(물고기정답위치) == 0:
+                        # 시작시간 = pg.time.get_ticks()
+                        물고기위치 = random.sample(전체물고기위치, 5)
 
-                    for 위치 in range(5):
+                        for 위치 in range(5):
+                            랜덤물고기 = random.choice(물고기)
+                            물고기좌표 = 랜덤물고기.get_rect(topleft=(물고기위치[위치][0], 물고기위치[위치][1]))
+                            화면.blit(랜덤물고기, 물고기좌표)
+                            물고기정답위치.append(물고기좌표)
+                        클릭횟수 = 10
+                        continue
+
+                    물고기위치 = random.sample(전체물고기위치, len(물고기정답위치))
+                    물고기정답위치2 = []
+                    for 위치 in range(len(물고기정답위치)):
                         랜덤물고기 = random.choice(물고기)
-                        물고기좌표 = 랜덤물고기.get_rect(topleft=(물고기위치[위치][0], 물고기위치[위치[1]]))
+                        물고기좌표 = 랜덤물고기.get_rect(topleft=(물고기위치[위치][0], 물고기위치[위치][1]))
                         화면.blit(랜덤물고기, 물고기좌표)
-                        물고기정답위치.append(물고기좌표)
-                    클릭횟수 = 10
-                    continue
+                        물고기정답위치2.append(물고기좌표)
 
-                 
-                물고기위치 = random.sample(전체물고기위치, len(물고기정답위치))
-                물고기정답위치2 = []
-                for 위치 in range(len(물고기정답위치)):
-                    랜덤물고기 = random.choice(물고기)
-                    물고기좌표 = 랜덤물고기.get_rect(topleft=(물고기위치[위치][0], 물고기위치[위치][1]))
-                    화면.blit(랜덤물고기, 물고기좌표)
-                    물고기정답위치2.append(물고기좌표)
-
-                물고기정답위치 = []
-                물고기정답위치.extend(물고기정답위치2)
-            pg.display.update()
+                    물고기정답위치 = []
+                    물고기정답위치.extend(물고기정답위치2)
+                pg.display.update()
