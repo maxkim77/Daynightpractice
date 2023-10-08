@@ -1,0 +1,1 @@
+('C:\\Users\\PC_1M\\OneDrive\\바탕 화면\\pygame\\build\\game\\PYZ-00.pyz', [])
